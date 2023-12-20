@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HidApiSample", "samples\HidApiSample.csproj", "{E9039A02-15D0-4525-A869-AA7C8D01B8C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.NativeShim.SDK", "src\MSBuild.NativeShim.SDK.csproj", "{5E7A1897-F28F-4735-98B3-970C4B52BC30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.NativeShim.SDK.Tests.Unit", "tests\MSBuild.NativeShim.SDK.Tests.Unit.csproj", "{C0C3932A-6EBC-4AD7-8D7B-3C4250C6CCAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9039A02-15D0-4525-A869-AA7C8D01B8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9039A02-15D0-4525-A869-AA7C8D01B8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9039A02-15D0-4525-A869-AA7C8D01B8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9039A02-15D0-4525-A869-AA7C8D01B8C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E7A1897-F28F-4735-98B3-970C4B52BC30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E7A1897-F28F-4735-98B3-970C4B52BC30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E7A1897-F28F-4735-98B3-970C4B52BC30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E7A1897-F28F-4735-98B3-970C4B52BC30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0C3932A-6EBC-4AD7-8D7B-3C4250C6CCAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0C3932A-6EBC-4AD7-8D7B-3C4250C6CCAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0C3932A-6EBC-4AD7-8D7B-3C4250C6CCAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0C3932A-6EBC-4AD7-8D7B-3C4250C6CCAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
