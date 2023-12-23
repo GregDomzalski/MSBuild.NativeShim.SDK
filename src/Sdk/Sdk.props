@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <!-- Give people a way to know for sure that the NativeShim SDK is the one being used. -->
+        <UsingNativeShimSdk>true</UsingNativeShimSdk>
+        <MSBuildAllProjects Condition=" '$(MSBuildToolsVersion)' != 'Current' ">$(MSBuildAllProjects);$(MsBuildThisFileFullPath)</MSBuildAllProjects>
+    </PropertyGroup>
+
+    <!-- Allow hook points around our project SDK, just like with other official SDK projects and samples -->
+    <Import Project="$(CustomBeforeNativeShimSdkProps)" Condition=" '$(CustomBeforeNativeShimSdkProps)' != '' and Exists('$(CustomBeforeNativeShimSdkProps)') " />
+
+    <!--
+    ===========================================================================
+    MSBuild.NativeShim.SDK
+
+    Properties specific to defining and setting up this SDK. These properties
+    should generally not be modified. There is a separate labeled property group
+    that defines how you can extend and modify the behavior of this SDK.
+    ===========================================================================
+    -->
+    <PropertyGroup>
+
+        <!-- We don't actually target any managed framework, so let's just pick one that allows us to reach a wide audience -->
+        <TargetFramework>netstandard2.0</TargetFramework>
+
+        <!-- Solutions need a project type to have a GUID in order to be added to the sln. This is ours. -->
+        <ProjectTypeGuids>7FB73150-8170-43EA-ADEE-FA411C4AFB9D</ProjectTypeGuids>
+
+        <!-- TODO: How do we hook DefaultCompileItems, etc. ? -->
+
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+
+        <!-- We don't target any .NET implementations. Don't pull in any of their references. -->
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+        <NoCompilerStandardLib>false</NoCompilerStandardLib>
+        <NoStdLib>true</NoStdLib>
+
+        <!-- Disable other MSBuild tasks and imports that we don't need -->
+        <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
+        <DisableImplicitFrameworkDefines>true</DisableImplicitFrameworkDefines>
+        <DisableStandardFrameworkResolution>true</DisableStandardFrameworkResolution>
+        <ImportDirectoryPackagesProps>false</ImportDirectoryPackagesProps>
+        <GlobalUsings>false</GlobalUsings>
+
+        <!-- Disable publish actions -->
+<!--        <CopyBuildOutputToPublishDirectory Condition="'$(CopyBuildOutputToPublishDirectory)' == ''">false</CopyBuildOutputToPublishDirectory>-->
+<!--        <CopyOutputSymbolsToPublishDirectory Condition="'$(CopyOutputSymbolsToPublishDirectory)' == ''">false</CopyOutputSymbolsToPublishDirectory>-->
+
+        <!-- Disable generated files that we don't need. -->
+        <GenerateDependencyFile>false</GenerateDependencyFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateMSBuildEditorConfigFile>false</GenerateMSBuildEditorConfigFile>
+        <GenerateRuntimeConfigDevFile>false</GenerateRuntimeConfigDevFile>
+
+        <!-- Don't log the high priority message mentioning this project's name (or copy the product we didn't build). -->
+<!--        <SkipCopyBuildProduct Condition="'$(SkipCopyBuildProduct)' == ''">true</SkipCopyBuildProduct>-->
+
+        <!-- Disable Visual Studio's Fast Up-to-date Check and rely on MSBuild to determine -->
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+
+    </PropertyGroup>
+
+    <ItemDefinitionGroup>
+        <ProjectReference>
+            <!--
+              Setting ReferenceOutputAssembly skips target framework cross-project validation in NuGet.  Since NativeShim
+              projects don't define runtime constraints like a target framework, there's no point in checking the
+              compatibilty of project references.
+            -->
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+        </ProjectReference>
+    </ItemDefinitionGroup>
+
+    <!--
+        This SDK defines some custom tasks. Construct the path to the assembly that contains them so that we may import
+        them later on in our targets file.
+    -->
+    <PropertyGroup>
+        <_ThisSDKAssemblyPath>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory),"..","lib","netstandard2.0","MSBuild.NativeShim.SDK.dll"))</_ThisSDKAssemblyPath>
+    </PropertyGroup>
+
+<!--    <PropertyGroup>-->
+<!--        <DefaultLanguageSourceExtension>c</DefaultLanguageSourceExtension>-->
+<!--        <ExcludeRestorePackageImports>true</ExcludeRestorePackageImports>-->
+<!--    </PropertyGroup>-->
+
+    <Target Name="CreateManifestResourceNames" />
+
+    <!--
+        Although we are not building any .NET or managed code in this project, we still want to hook into the common
+        .NET SDK. Since we are implementing similar processes like our own Restore, Build, and Pack targets, it's best
+        to use what exists, and modify/hook where appropriate. This can potentially afford us wider support amongst
+        existing tools and get other benefits "for free". Or, I'll live to regret this and it'll be a never ending
+        source of headaches. I guess time will tell!
+    -->
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' " />
+
+    <!-- Allow hook points around our project SDK, just like with other official SDK projects and samples -->
+    <Import Project="$(CustomAfterNativeShimsSdkProps)" Condition=" '$(CustomAfterNativeShimsSdkProps)' != '' and Exists('$(CustomAfterNativeShimsSdkProps)') " />
+
+    <!-- For CPS/VS support. Importing in .props allows any subsequent targets to redefine this if needed. -->
+    <Target Name="CompileDesignTime" />
+</Project>

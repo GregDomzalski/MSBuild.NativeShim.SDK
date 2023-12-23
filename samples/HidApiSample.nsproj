@@ -1,0 +1,9 @@
+﻿<Project Sdk="MSBuild.NativeShim.SDK/0.1.0-build.1">
+    <PropertyGroup>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <VcpkgReference Include="hidapi" />
+    </ItemGroup>
+</Project>

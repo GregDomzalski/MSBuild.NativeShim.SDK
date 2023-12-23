@@ -2,8 +2,57 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>Latest</LangVersion>
     <Nullable>enable</Nullable>
+
+    <!-- <NoWarn>$(NoWarn);NU5128;SA0001</NoWarn>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors> -->
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Enable local testing of our NuGet based MSBuild SDK. -->
+    <PackageOutputPath>../packageTemp</PackageOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>build.1</VersionSuffix>
+    <Description>
+      MSBuild SDK for creating self-contained native dependencies that can be consumed by .NET
+      projects through NuGet.
+    </Description>
+    <Authors>Greg Domzalski</Authors>
+    <Company>GregDom</Company>
+    <Copyright>© GregDom. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/GregDomzalski/MSBuild.NativeShim.SDK</PackageProjectUrl>
+    <PackageIcon>ProjectIcon.png</PackageIcon>
+    <PackageIconPath>$(MSBuildThisFileDirectory)branding\$(PackageIcon)</PackageIconPath>
+    <RepositoryUrl>https://github.com/GregDomzalski/MSBuild.NativeShim.SDK.git</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>MSBuild MSBuildSdk cmake native</PackageTags>
+    <PackageType>MSBuildSdk</PackageType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Update="Sdk\Sdk.*" Pack="true" PackagePath="\" />
+    <Content Include="../LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference
+      Include="Microsoft.Build.Framework"
+      Version="16.0.461"
+      PrivateAssets="all" />
+
+    <PackageReference
+      Include="Microsoft.Build.Tasks.Core"
+      Version="16.0.461"
+      PrivateAssets="all" />
+
+    <PackageReference
+      Include="Microsoft.Build.Utilities.Core"
+      Version="16.0.461"
+      PrivateAssets="all"
+      ExcludeAssets="Runtime" />
+  </ItemGroup>
 </Project>
