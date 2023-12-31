@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <DefaultLanguageSourceExtension>*.c</DefaultLanguageSourceExtension>
+        <Language>C++</Language>
+        <TargetRuntime>None</TargetRuntime>
+        <AlwaysUseNumericalSuffixInItemNames>true</AlwaysUseNumericalSuffixInItemNames>
+        <DefineCommonItemSchemas Condition=" '$(DefineCommonItemSchemas)' == '' ">true</DefineCommonItemSchemas>
+        <DefineCommonReferenceSchemas Condition=" '$(DefineCommonReferenceSchemas)' == '' ">true</DefineCommonReferenceSchemas>
+        <DefineCommonCapabilities Condition=" '$(DefineCommonCapabilities)' == '' ">true</DefineCommonCapabilities>
+        <SynthesizeLinkMetadata Condition=" '$(SynthesizeLinkMetadata)' == '' and '$(HasSharedItems)' == 'true' ">true</SynthesizeLinkMetadata>
+        <!-- TODO: Probably change this GUID to something unique. -->
+        <DefaultProjectTypeGuid Condition=" '$(DefaultProjectTypeGuid)' == '' ">{7FB73150-8170-43EA-ADEE-FA411C4AFB9D}</DefaultProjectTypeGuid>
+        <AppDesignerFolder Condition="'$(AppDesignerFolder)' == ''">Properties</AppDesignerFolder>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" '$(DefineCommonCapabilities)' == 'true' ">
+        <ProjectCapability Include="ReferencesFolder;LanguageService" />
+    </ItemGroup>
+
+    <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+
+</Project>

@@ -11,7 +11,7 @@
         needed.
     -->
     <PropertyGroup>
-        <LanguageTargets>$(MSBuildToolsPath)\Microsoft.Common.targets</LanguageTargets>
+        <LanguageTargets>$(MsBuildThisFileDirectory)/../Build/NativeShim.Cpp.targets</LanguageTargets>
         <MSBuildAllProjects Condition="'$(MSBuildToolsVersion)' != 'Current'">$(MSBuildAllProjects);$(MsBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 
@@ -58,12 +58,19 @@
     <Target Name="_GenerateCompileInputs" />
     <Target Name="_GenerateCompileDependencyCache" />
 
+    <PropertyGroup>
+        <VcpkgManifestPath Condition=" '$(VcpkgManifestPath)' == '' ">$([System.IO.Path]::Combine($(IntermediateOutputPath),"vcpkg.json"))</VcpkgManifestPath>
+        <CMakeListsFilePath Condition=" '$(CMakeListsFilePath)' == '' ">$([System.IO.Path]::Combine($(IntermediateOutputPath),"CMakeLists.txt"))</CMakeListsFilePath>
+        <CMakeProjectName Condition=" '$(CMakeProjectName)' == '' ">$(MSBuildProjectName)</CMakeProjectName>
+    </PropertyGroup>
+
     <!-- TODO: Is this still needed given how much we override in build? -->
     <!-- Disables the _CopyFilesMarkedCopyLocal target to not copy references when SkipCopyFilesMarkedCopyLocal is set to false. -->
     <Import Project="DisableCopyFilesMarkedCopyLocal.targets" Condition="'$(SkipCopyFilesMarkedCopyLocal)' == 'true'" />
 
+    <UsingTask TaskName="CreateVcpkgManifestTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+    <UsingTask TaskName="CreateCMakeListsTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
     <UsingTask TaskName="CMakeBuildTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
-    <UsingTask TaskName="HelloWorld" AssemblyFile="$(_ThisSDKAssemblyPath)" />
 
     <!--
     ============================================================================================
@@ -71,7 +78,10 @@
     ============================================================================================
     -->
     <Target Name="GenerateVcpkgManifest">
-        <Message Text="Running GenerateVcpkgManifest new" Importance="high" />
+        <Message Text="Running GenerateVcpkgManifest $(VcpkgManifestPath)" Importance="high" />
+        <CreateVcpkgManifestTask
+            References="@(VcpkgReference)"
+            ManifestOutputPath="$(VcpkgManifestPath)" />
     </Target>
 
     <!--
@@ -80,7 +90,13 @@
     ============================================================================================
     -->
     <Target Name="GenerateCMakeListsFile">
-        <Message Text="Running GenerateCMakeListsFile" Importance="high" />
+        <Message Text="Running GenerateCMakeListsFile $(CMakeListsFilePath)" Importance="high" />
+        <CreateCMakeListsTask
+            ProjectName="$(CMakeProjectName)"
+            ProjectVersion="$(Version)"
+            Packages="@(VcpkgReference)"
+            CompileItems="@(Compile)"
+            CMakeListsFilePath="$(CMakeListsFilePath)" />
     </Target>
 
     <!--

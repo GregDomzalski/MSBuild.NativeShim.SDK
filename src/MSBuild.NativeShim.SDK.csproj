@@ -16,7 +16,7 @@
 
   <PropertyGroup>
     <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix>build.1</VersionSuffix>
+    <VersionSuffix>build.9</VersionSuffix>
     <Description>
       MSBuild SDK for creating self-contained native dependencies that can be consumed by .NET
       projects through NuGet.
@@ -34,25 +34,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Update="Sdk\Sdk.*" Pack="true" PackagePath="\" />
-    <Content Include="../LICENSE" Pack="true" PackagePath="\" />
+    <Content Update="Sdk/Sdk.*" Pack="true" PackagePath="/" />
+    <Content Include="../LICENSE" Pack="true" PackagePath="/" />
+    <Content Include="Build/*" PackagePath="/Build" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference
-      Include="Microsoft.Build.Framework"
-      Version="16.0.461"
-      PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.8.3" PrivateAssets="all" />
 
-    <PackageReference
-      Include="Microsoft.Build.Tasks.Core"
-      Version="16.0.461"
-      PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.8.3" PrivateAssets="all" />
 
-    <PackageReference
-      Include="Microsoft.Build.Utilities.Core"
-      Version="16.0.461"
-      PrivateAssets="all"
-      ExcludeAssets="Runtime" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.8.3" PrivateAssets="all" ExcludeAssets="Runtime" />
   </ItemGroup>
 </Project>

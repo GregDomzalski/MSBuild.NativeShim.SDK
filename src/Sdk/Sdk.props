@@ -29,11 +29,6 @@
         <!-- We don't actually target any managed framework, so let's just pick one that allows us to reach a wide audience -->
         <TargetFramework>netstandard2.0</TargetFramework>
 
-        <!-- Solutions need a project type to have a GUID in order to be added to the sln. This is ours. -->
-        <ProjectTypeGuids>7FB73150-8170-43EA-ADEE-FA411C4AFB9D</ProjectTypeGuids>
-
-        <!-- TODO: How do we hook DefaultCompileItems, etc. ? -->
-
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 
         <!-- We don't target any .NET implementations. Don't pull in any of their references. -->
@@ -65,6 +60,8 @@
         <!-- Disable Visual Studio's Fast Up-to-date Check and rely on MSBuild to determine -->
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 
+        <AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
 
     <ItemDefinitionGroup>

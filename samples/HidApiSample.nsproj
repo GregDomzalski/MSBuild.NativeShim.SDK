@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.NativeShim.SDK/0.1.0-build.1">
+﻿<Project Sdk="MSBuild.NativeShim.SDK/0.1.0-build.9">
     <PropertyGroup>
 
     </PropertyGroup>
