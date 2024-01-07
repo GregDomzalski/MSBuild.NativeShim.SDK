@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Host environment detection -->
+    <PropertyGroup>
+        <HostIsLinux>false</HostIsLinux>
+        <HostIsMacOS>false</HostIsMacOS>
+        <HostIsWindows>false</HostIsWindows>
+
+        <HostIsLinux>$([System.OperatingSystem]::IsLinux())</HostIsLinux>
+        <HostIsMacOS>$([System.OperatingSystem]::IsMacOS())</HostIsMacOS>
+        <HostIsWindows>$([System.OperatingSystem]::IsWindows())</HostIsWindows>
+
+        <HostOS>Unknown</HostOS>
+        <HostOS Condition=" $(HostIsLinux) ">linux</HostOS>
+        <HostOS Condition=" $(HostIsMacOS) ">macos</HostOS>
+        <HostOS Condition=" $(HostIsWindows) ">windows</HostOS>
+
+        <!-- Expected values: arm, arm64, wasm, x64, x86 -->
+        <HostArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</HostArchitecture>
+
+        <_HostOSInRIDFormat>unknown</_HostOSInRIDFormat>
+        <_HostOSInRIDFormat Condition=" $(HostIsLinux) ">linux</_HostOSInRIDFormat>
+        <_HostOSInRIDFormat Condition=" $(HostIsMacOS) ">osx</_HostOSInRIDFormat>
+        <_HostOSInRIDFormat Condition=" $(HostIsWindows) ">win</_HostOSInRIDFormat>
+
+        <HostRuntimeIdentifier>$(_HostOSInRIDFormat)-$(HostArchitecture)</HostRuntimeIdentifier>
+    </PropertyGroup>
+</Project>

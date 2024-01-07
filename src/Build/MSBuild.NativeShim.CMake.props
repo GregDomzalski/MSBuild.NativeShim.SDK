@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <CMakeListsFilePath Condition=" '$(CMakeListsFilePath)' == '' ">$([System.IO.Path]::Combine($(IntermediateOutputPath),"CMakeLists.txt"))</CMakeListsFilePath>
+        <CMakeMinimumVersion Condition=" '$(CMakeMinimumVerison)' == '' ">3.12</CMakeMinimumVersion>
+
+        <CMakeProjectName Condition=" '$(CMakeProjectName)' == '' ">$(MSBuildProjectName)</CMakeProjectName>
+        <CMakeProjectVersion Condition=" '$(CMakeProjectVersion)' == '' ">$(Version)</CMakeProjectVersion>
+
+        <CMakeToolName Condition=" '$(CMakeToolName)' == '' ">cmake</CMakeToolName>
+        <CMakeConfiguration Condition=" '$(CMakeConfiguration)' == '' ">$(Configuration)</CMakeConfiguration>
+
+        <CMakeGenerator Condition=" '$(CMakeGenerator)' == '' and $(TargetIsLinux) ">Unix Makefiles</CMakeGenerator>
+        <CMakeGenerator Condition=" '$(CMakeGenerator)' == '' and $(TargetIsMacOS) ">Xcode</CMakeGenerator>
+        <CMakeGenerator Condition=" '$(CMakeGenerator)' == '' and $(TargetIsWindows) ">Visual Studio</CMakeGenerator>
+
+        <!-- TODO: CMakeArchitecture (-A, etc.), CMakeConfiguration, Include files, etc. -->
+    </PropertyGroup>
+</Project>

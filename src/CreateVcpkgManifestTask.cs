@@ -23,6 +23,8 @@ public class CreateVcpkgManifestTask : Task
             return false;
         }
 
+        Directory.CreateDirectory(Path.GetDirectoryName(ManifestOutputPath)!);
+
         References ??= Array.Empty<ITaskItem>();
 
         StringBuilder sb = new();

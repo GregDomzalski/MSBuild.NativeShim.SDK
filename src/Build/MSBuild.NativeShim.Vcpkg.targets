@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <UsingTask TaskName="CreateVcpkgManifestTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+
+    <!--
+    ============================================================================================
+    GenerateVcpkgManifest
+    ============================================================================================
+    -->
+    <Target Name="GenerateVcpkgManifest">
+        <Message Text="Running GenerateVcpkgManifest $(VcpkgManifestPath)" Importance="high" />
+        <CreateVcpkgManifestTask
+                References="@(VcpkgReference)"
+                ManifestOutputPath="$(VcpkgManifestPath)" />
+    </Target>
+</Project>

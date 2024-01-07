@@ -10,99 +10,45 @@
         <!-- Give people a way to know for sure that the NativeShim SDK is the one being used. -->
         <UsingNativeShimSdk>true</UsingNativeShimSdk>
         <MSBuildAllProjects Condition=" '$(MSBuildToolsVersion)' != 'Current' ">$(MSBuildAllProjects);$(MsBuildThisFileFullPath)</MSBuildAllProjects>
+
+        <_ThisSDKBuildDir>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory),"..","Build"))/</_ThisSDKBuildDir>
+        <_ThisSDKAssemblyPath>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory),"..","lib","netstandard2.0","MSBuild.NativeShim.SDK.dll"))</_ThisSDKAssemblyPath>
     </PropertyGroup>
 
     <!-- Allow hook points around our project SDK, just like with other official SDK projects and samples -->
     <Import Project="$(CustomBeforeNativeShimSdkProps)" Condition=" '$(CustomBeforeNativeShimSdkProps)' != '' and Exists('$(CustomBeforeNativeShimSdkProps)') " />
 
     <!--
-    ===========================================================================
-    MSBuild.NativeShim.SDK
-
-    Properties specific to defining and setting up this SDK. These properties
-    should generally not be modified. There is a separate labeled property group
-    that defines how you can extend and modify the behavior of this SDK.
-    ===========================================================================
+    Declare all of the Host* properties.
     -->
-    <PropertyGroup>
-
-        <!-- We don't actually target any managed framework, so let's just pick one that allows us to reach a wide audience -->
-        <TargetFramework>netstandard2.0</TargetFramework>
-
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-
-        <!-- We don't target any .NET implementations. Don't pull in any of their references. -->
-        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-        <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
-        <NoCompilerStandardLib>false</NoCompilerStandardLib>
-        <NoStdLib>true</NoStdLib>
-
-        <!-- Disable other MSBuild tasks and imports that we don't need -->
-        <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
-        <DisableImplicitFrameworkDefines>true</DisableImplicitFrameworkDefines>
-        <DisableStandardFrameworkResolution>true</DisableStandardFrameworkResolution>
-        <ImportDirectoryPackagesProps>false</ImportDirectoryPackagesProps>
-        <GlobalUsings>false</GlobalUsings>
-
-        <!-- Disable publish actions -->
-<!--        <CopyBuildOutputToPublishDirectory Condition="'$(CopyBuildOutputToPublishDirectory)' == ''">false</CopyBuildOutputToPublishDirectory>-->
-<!--        <CopyOutputSymbolsToPublishDirectory Condition="'$(CopyOutputSymbolsToPublishDirectory)' == ''">false</CopyOutputSymbolsToPublishDirectory>-->
-
-        <!-- Disable generated files that we don't need. -->
-        <GenerateDependencyFile>false</GenerateDependencyFile>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <GenerateMSBuildEditorConfigFile>false</GenerateMSBuildEditorConfigFile>
-        <GenerateRuntimeConfigDevFile>false</GenerateRuntimeConfigDevFile>
-
-        <!-- Don't log the high priority message mentioning this project's name (or copy the product we didn't build). -->
-<!--        <SkipCopyBuildProduct Condition="'$(SkipCopyBuildProduct)' == ''">true</SkipCopyBuildProduct>-->
-
-        <!-- Disable Visual Studio's Fast Up-to-date Check and rely on MSBuild to determine -->
-        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-
-        <AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
-        <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
-    </PropertyGroup>
-
-    <ItemDefinitionGroup>
-        <ProjectReference>
-            <!--
-              Setting ReferenceOutputAssembly skips target framework cross-project validation in NuGet.  Since NativeShim
-              projects don't define runtime constraints like a target framework, there's no point in checking the
-              compatibilty of project references.
-            -->
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-        </ProjectReference>
-    </ItemDefinitionGroup>
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.HostDetection.props" />
 
     <!--
-        This SDK defines some custom tasks. Construct the path to the assembly that contains them so that we may import
-        them later on in our targets file.
+    Declare all of the Target* properties. The Target defaults to the Host environment, but can be overridden with the
+    RuntimeIdentifier property. This can be set via a commandline argument, but not in the project file.
     -->
-    <PropertyGroup>
-        <_ThisSDKAssemblyPath>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory),"..","lib","netstandard2.0","MSBuild.NativeShim.SDK.dll"))</_ThisSDKAssemblyPath>
-    </PropertyGroup>
-
-<!--    <PropertyGroup>-->
-<!--        <DefaultLanguageSourceExtension>c</DefaultLanguageSourceExtension>-->
-<!--        <ExcludeRestorePackageImports>true</ExcludeRestorePackageImports>-->
-<!--    </PropertyGroup>-->
-
-    <Target Name="CreateManifestResourceNames" />
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.TargetDetection.props" />
 
     <!--
-        Although we are not building any .NET or managed code in this project, we still want to hook into the common
-        .NET SDK. Since we are implementing similar processes like our own Restore, Build, and Pack targets, it's best
-        to use what exists, and modify/hook where appropriate. This can potentially afford us wider support amongst
-        existing tools and get other benefits "for free". Or, I'll live to regret this and it'll be a never ending
-        source of headaches. I guess time will tell!
+    Makes sure common MSBuild properties like IntermediateOutDir, OutDir, Configuration, and others are set to reasonable
+    default values. These values can be overridden using CLI parameters.
     -->
-    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' " />
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.Common.props" />
+
+    <!--
+    Sets defaults for the various components of the build system that we are using. Configurable properties are located
+    and documented in each of these files.
+    -->
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.Build.props" />
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.Vcpkg.props" />
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.CMake.props" />
+
+    <!--
+    Define the defaults and expected shape of some common item groups used by this SDK.
+    -->
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.ItemDefinitions.props" />
 
     <!-- Allow hook points around our project SDK, just like with other official SDK projects and samples -->
     <Import Project="$(CustomAfterNativeShimsSdkProps)" Condition=" '$(CustomAfterNativeShimsSdkProps)' != '' and Exists('$(CustomAfterNativeShimsSdkProps)') " />
 
-    <!-- For CPS/VS support. Importing in .props allows any subsequent targets to redefine this if needed. -->
-    <Target Name="CompileDesignTime" />
 </Project>

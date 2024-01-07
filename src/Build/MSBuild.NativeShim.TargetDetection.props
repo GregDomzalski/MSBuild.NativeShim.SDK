@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Target settings -->
+    <PropertyGroup>
+        <!-- This is a well-known property that may come from the CLI -->
+        <RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">$(HostRuntimeIdentifier)</RuntimeIdentifier>
+
+        <TargetRuntimeIdentifier>$(RuntimeIdentifier)</TargetRuntimeIdentifier>
+
+        <_TargetOSFromRID>$(TargetRuntimeIdentifier.Split('-')[0])</_TargetOSFromRID>
+        <_TargetArchFromRID>$(TargetRuntimeIdentifier.Split('-')[1])</_TargetArchFromRID>
+
+        <TargetOS>Unknown</TargetOS>
+        <TargetOS Condition=" '$(_TargetOSFromRID)' == 'linux' ">linux</TargetOS>
+        <TargetOS Condition=" '$(_TargetOSFromRID)' == 'osx' ">macos</TargetOS>
+        <TargetOS Condition=" '$(_TargetOSFromRID)' == 'win' ">windows</TargetOS>
+        <TargetArchitecture>$(_TargetArchFromRID)</TargetArchitecture>
+
+        <TargetIsLinux>false</TargetIsLinux>
+        <TargetIsMacOS>false</TargetIsMacOS>
+        <TargetIsWindows>false</TargetIsWindows>
+
+        <TargetIsLinux Condition=" '$(_TargetOS)' == 'linux' ">true</TargetIsLinux>
+        <TargetIsMacOS Condition=" '$(_TargetOS)' == 'osx' ">true</TargetIsMacOS>
+        <TargetIsWindows Condition=" '$(_TargetOS)' == 'win' ">true</TargetIsWindows>
+    </PropertyGroup>
+</Project>

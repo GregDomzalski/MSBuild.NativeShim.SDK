@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <UsingTask TaskName="CreateCMakeListsTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+    <UsingTask TaskName="CMakeBuildTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+
+    <!--
+    ============================================================================================
+    GenerateCMakeListsFile
+    ============================================================================================
+    -->
+    <Target Name="GenerateCMakeListsFile">
+        <Message Text="Running GenerateCMakeListsFile $(CMakeListsFilePath)" Importance="high" />
+        <CreateCMakeListsTask
+                ProjectName="$(CMakeProjectName)"
+                ProjectVersion="$(Version)"
+                Packages="@(VcpkgReference)"
+                CompileItems="@(Compile)"
+                CMakeListsFilePath="$(CMakeListsFilePath)" />
+    </Target>
+
+    <!--
+    ============================================================================================
+    ConfigureCMakeProject
+    ============================================================================================
+    -->
+    <Target Name="ConfigureCMakeProject">
+        <Message Text="Running ConfigureCMakeProject" Importance="high" />
+    </Target>
+
+    <!--
+    ============================================================================================
+    BuildCMakeProject
+    ============================================================================================
+    -->
+    <Target Name="BuildCMakeProject">
+        <Message Text="Running BuildCMakeProject" Importance="high" />
+    </Target>
+</Project>

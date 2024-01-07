@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Greg Domzalski. All rights reserved.
+
+  Licensed under the MIT license.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <VcpkgManifestPath Condition=" '$(VcpkgManifestPath)' == '' ">$([System.IO.Path]::Combine($(IntermediateOutputPath),"vcpkg.json"))</VcpkgManifestPath>
+        <VcpkgProjectName Condition=" '$(VcpkgProjectName)' == '' ">$(MSBuildProjectName)</VcpkgProjectName>
+        <VcpkgToolName Condition=" '$(VcpkgToolName)' == '' ">vcpkg</VcpkgToolName>
+        <VcpkgUseStatic Condition=" '$(VcpkgUseStatic)' == '' ">$(UseStaticRuntime)</VcpkgUseStatic>
+    </PropertyGroup>
+</Project>
