@@ -10,5 +10,26 @@
         <VcpkgProjectName Condition=" '$(VcpkgProjectName)' == '' ">$(MSBuildProjectName)</VcpkgProjectName>
         <VcpkgToolName Condition=" '$(VcpkgToolName)' == '' ">vcpkg</VcpkgToolName>
         <VcpkgUseStatic Condition=" '$(VcpkgUseStatic)' == '' ">$(UseStaticRuntime)</VcpkgUseStatic>
+
+        <!-- Linux target triplets -->
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'linux-arm32' ">arm-linux</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'linux-arm64' ">arm64-linux</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'linux-x86' ">x86-linux</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'linux-x64' ">x64-linux</VcpkgTargetTriplet>
+
+        <!-- MacOS target triplets -->
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'osx-arm64' ">arm64-osx-release</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'osx-x64' ">x64-osx-release</VcpkgTargetTriplet>
+
+        <!-- Windows target triplets -->
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'win-arm64' ">arm64-windows</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'win-x86' ">x86-windows</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetRuntimeIdentifier)' == 'win-x64' ">x64-windows</VcpkgTargetTriplet>
+        <VcpkgTargetTriplet Condition=" '$(TargetOS)' == 'windows' and '$(UseStaticRuntime)' == 'true' ">$(VcpkgTargetTriplet)-static</VcpkgTargetTriplet>
+
+        <VcpkgRootPath>$(VCPKG_INSTALLATION_ROOT)</VcpkgRootPath>
+        <VcpkgRootPath Condition=" !HasTrailingSlash('$(VcpkgRootPath)') ">$(VcpkgRootPath)/</VcpkgRootPath>
+
+        <VcpkgToolchainFile>$(VcpkgRootPath)scripts/buildsystems/vcpkg.cmake</VcpkgToolchainFile>
     </PropertyGroup>
 </Project>

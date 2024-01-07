@@ -8,17 +8,49 @@
     <PropertyGroup>
         <CMakeListsFilePath Condition=" '$(CMakeListsFilePath)' == '' ">$([System.IO.Path]::Combine($(IntermediateOutputPath),"CMakeLists.txt"))</CMakeListsFilePath>
         <CMakeMinimumVersion Condition=" '$(CMakeMinimumVerison)' == '' ">3.12</CMakeMinimumVersion>
-
         <CMakeProjectName Condition=" '$(CMakeProjectName)' == '' ">$(MSBuildProjectName)</CMakeProjectName>
         <CMakeProjectVersion Condition=" '$(CMakeProjectVersion)' == '' ">$(Version)</CMakeProjectVersion>
-
-        <CMakeToolName Condition=" '$(CMakeToolName)' == '' ">cmake</CMakeToolName>
         <CMakeConfiguration Condition=" '$(CMakeConfiguration)' == '' ">$(Configuration)</CMakeConfiguration>
+
+        <CMakeProjectRoot>$(MSBuildProjectDirectory)</CMakeProjectRoot>
+
+        <!-- CMakeConfigure -->
+        <!-- TODO: This needs to be way better... like autodetecting based on path environment -->
+        <CMakeToolPath>cmake</CMakeToolPath>
+        <CMakeToolPath Condition=" $(HostIsLinux) ">/usr/bin/cmake</CMakeToolPath>
+        <CMakeToolPath Condition=" $(HostIsWindows) ">cmake.exe</CMakeToolPath>
+
+        <CMakeBuildDirectory>$(IntermediateOutputPath)cmake</CMakeBuildDirectory>
+        <CMakeSourceDirectory>$(IntermediateOutputPath)</CMakeSourceDirectory>
 
         <CMakeGenerator Condition=" '$(CMakeGenerator)' == '' and $(TargetIsLinux) ">Unix Makefiles</CMakeGenerator>
         <CMakeGenerator Condition=" '$(CMakeGenerator)' == '' and $(TargetIsMacOS) ">Xcode</CMakeGenerator>
         <CMakeGenerator Condition=" '$(CMakeGenerator)' == '' and $(TargetIsWindows) ">Visual Studio</CMakeGenerator>
 
-        <!-- TODO: CMakeArchitecture (-A, etc.), CMakeConfiguration, Include files, etc. -->
+        <_CMakePlatformNameNeeded>false</_CMakePlatformNameNeeded>
+        <_CMakePlatformNameNeeded Condition=" '$(CMakeGenerator)' == 'Visual Studio' and $(IsCrossCompile) ">true</_CMakePlatformNameNeeded>
+
+        <CMakePlatformName Condition=" $(_CMakePlatformNameNeeded) and '$(TargetArchitecture)' == 'x86' ">Win32</CMakePlatformName>
+        <CMakePlatformName Condition=" $(_CMakePlatformNameNeeded) and '$(TargetArchitecture)' == 'x64' ">x64</CMakePlatformName>
+        <CMakePlatformName Condition=" $(_CMakePlatformNameNeeded) and '$(TargetArchitecture)' == 'arm64' ">ARM64</CMakePlatformName>
+
+        <_CMakeOSXArchitectureNeeded>false</_CMakeOSXArchitectureNeeded>
+        <_CMakeOSXArchitectureNeeded Condition=" '$(CMakeGenerator)' == 'Xcode' and $(IsCrossCompile) ">true</_CMakeOSXArchitectureNeeded>
+
+        <_CMakeOSXArchitecture>BadValue</_CMakeOSXArchitecture>
+        <_CMakeOSXArchitecture Condition=" $(TargetArchitecture) == 'x64' ">x86_64</_CMakeOSXArchitecture>
+        <_CMakeOSXArchitecture Condition=" $(TargetArchitecture) == 'arm64' ">arm64</_CMakeOSXArchitecture>
+
+        <CMakeToolchainFilePath>$(VcpkgToolchainFile)</CMakeToolchainFilePath>
+
+        <CMakeInstallPrefixDirectory>$(MSBuildProjectDirectory)/$(OutputPath)</CMakeInstallPrefixDirectory>
+
+        <!-- TODO: LogLevel, DebugOutput, Trace -->
     </PropertyGroup>
+
+    <ItemGroup>
+        <CMakeDefine Include="CMAKE_BUILD_TYPE" Value="$(CMakeConfiguration)" />
+        <CMakeDefine Include="CMAKE_OSX_ARCHITECTURE" Value="$(_CMakeOSXArchitecture)" Condition="$(_CMakeOSXArchitectureNeeded)" />
+        <CMakeDefine Include="VCPKG_TARGET_TRIPLET" Value="$(VcpkgTargetTriplet)" />
+    </ItemGroup>
 </Project>

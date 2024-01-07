@@ -7,7 +7,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <UsingTask TaskName="CreateCMakeListsTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
-    <UsingTask TaskName="CMakeBuildTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+    <UsingTask TaskName="CMakeConfigureTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
 
     <!--
     ============================================================================================
@@ -17,11 +17,12 @@
     <Target Name="GenerateCMakeListsFile">
         <Message Text="Running GenerateCMakeListsFile $(CMakeListsFilePath)" Importance="high" />
         <CreateCMakeListsTask
+                CMakeListsFilePath="$(CMakeListsFilePath)"
                 ProjectName="$(CMakeProjectName)"
+                ProjectRoot="$(CMakeProjectRoot)"
                 ProjectVersion="$(Version)"
                 Packages="@(VcpkgReference)"
-                CompileItems="@(Compile)"
-                CMakeListsFilePath="$(CMakeListsFilePath)" />
+                CompileItems="@(Compile)" />
     </Target>
 
     <!--
@@ -31,6 +32,15 @@
     -->
     <Target Name="ConfigureCMakeProject">
         <Message Text="Running ConfigureCMakeProject" Importance="high" />
+        <CMakeConfigureTask
+            CMakeToolPath="$(CMakeToolPath)"
+            BuildDirectory="$(IntermediateOutputPath)cmake"
+            SourceDirectory="$(IntermediateOutputPath)"
+            Defines="@(CMakeDefine)"
+            Generator="$(CMakeGenerator)"
+            PlatformName="$(CMakePlatformName)"
+            ToolchainFilePath="$(CMakeToolchainFilePath)"
+            InstallPrefixDirectory="$(CMakeInstallPrefixDirectory)" />
     </Target>
 
     <!--

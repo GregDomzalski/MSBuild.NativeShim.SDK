@@ -9,7 +9,13 @@ namespace GeNet.Sdk.NativeShim;
 public class CreateCMakeListsTask : Task
 {
     [Required]
+    public string? CMakeListsFilePath { get; set; }
+
+    [Required]
     public string? ProjectName { get; set; }
+
+    [Required]
+    public string? ProjectRoot { get; set; }
 
     public string? ProjectVersion { get; set; }
 
@@ -17,9 +23,6 @@ public class CreateCMakeListsTask : Task
 
     [Required]
     public ITaskItem[]? CompileItems { get; set; }
-
-    [Required]
-    public string? CMakeListsFilePath { get; set; }
 
     public override bool Execute()
     {
@@ -35,7 +38,16 @@ public class CreateCMakeListsTask : Task
         if (string.IsNullOrWhiteSpace(ProjectName))
         {
             LogError("NSSDK0001: The {0} parameter must be specified for the {1} task.",
-                nameof(CMakeListsFilePath),
+                nameof(ProjectName),
+                nameof(CreateCMakeListsTask));
+
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(ProjectRoot))
+        {
+            LogError("NSSDK0001: The {0} parameter must be specified for the {1} task.",
+                nameof(ProjectRoot),
                 nameof(CreateCMakeListsTask));
 
             return false;
@@ -49,7 +61,7 @@ public class CreateCMakeListsTask : Task
 
         sb.AppendLine("cmake_minimum_required(VERSION 3.15)");
         sb.AppendLine();
-        sb.AppendLine($"project({ProjectName} {ProjectVersion})");
+        sb.AppendLine($"project({ProjectName} VERSION {ProjectVersion})");
         sb.AppendLine();
 
         // Find packages
@@ -66,7 +78,7 @@ public class CreateCMakeListsTask : Task
         foreach (var compileItem in CompileItems)
         {
             sb.Append("        ");
-            sb.AppendLine(compileItem.ItemSpec);
+            sb.AppendLine(Path.Combine(ProjectRoot!, compileItem.ItemSpec));
         }
         sb.AppendLine(")");
         sb.AppendLine();
@@ -83,7 +95,7 @@ public class CreateCMakeListsTask : Task
         sb.AppendLine(")");
         sb.AppendLine();
 
-        File.WriteAllText(CMakeListsFilePath, sb.ToString());
+        File.WriteAllText(CMakeListsFilePath!, sb.ToString());
 
         return true;
     }

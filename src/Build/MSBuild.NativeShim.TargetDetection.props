@@ -25,8 +25,11 @@
         <TargetIsMacOS>false</TargetIsMacOS>
         <TargetIsWindows>false</TargetIsWindows>
 
-        <TargetIsLinux Condition=" '$(_TargetOS)' == 'linux' ">true</TargetIsLinux>
-        <TargetIsMacOS Condition=" '$(_TargetOS)' == 'osx' ">true</TargetIsMacOS>
-        <TargetIsWindows Condition=" '$(_TargetOS)' == 'win' ">true</TargetIsWindows>
+        <TargetIsLinux Condition=" '$(TargetOS)' == 'linux' ">true</TargetIsLinux>
+        <TargetIsMacOS Condition=" '$(TargetOS)' == 'osx' ">true</TargetIsMacOS>
+        <TargetIsWindows Condition=" '$(TargetOS)' == 'win' ">true</TargetIsWindows>
+
+        <IsCrossCompile>false</IsCrossCompile>
+        <IsCrossCompile Condition=" '$(HostArchitecture)' != '$(TargetArchitecture)' ">true</IsCrossCompile>
     </PropertyGroup>
 </Project>
