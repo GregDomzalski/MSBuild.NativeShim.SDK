@@ -45,6 +45,12 @@
 
         <CMakeInstallPrefixDirectory>$(MSBuildProjectDirectory)/$(OutputPath)</CMakeInstallPrefixDirectory>
 
+        <_CMakeOutputFileName>$(CMakeProjectName)</_CMakeOutputFileName>
+        <_CMakeOutputFileName Condition=" $(TargetIsLinux) or $(TargetIsMacOS) ">lib$(_CMakeOutputFileName)</_CMakeOutputFileName>
+        <_CMakeOutputFileName Condition="$(TargetIsLinux)">$(_CMakeOutputFileName).so</_CMakeOutputFileName>
+        <_CMakeOutputFileName Condition="$(TargetIsMacOS)">$(_CMakeOutputFileName).dylib</_CMakeOutputFileName>
+        <_CMakeOutputFileName Condition="$(TargetIsWindows)">$(_CMakeOutputFileName).lib</_CMakeOutputFileName>
+
         <!-- TODO: LogLevel, DebugOutput, Trace -->
     </PropertyGroup>
 
@@ -52,6 +58,5 @@
         <CMakeDefine Include="CMAKE_BUILD_TYPE" Value="$(CMakeConfiguration)" />
         <CMakeDefine Include="CMAKE_OSX_ARCHITECTURE" Value="$(_CMakeOSXArchitecture)" Condition="$(_CMakeOSXArchitectureNeeded)" />
         <CMakeDefine Include="VCPKG_TARGET_TRIPLET" Value="$(VcpkgTargetTriplet)" />
-        <CMakeDefine Include="CMAKE_INSTALL_LIBDIR" Value="''" />
     </ItemGroup>
 </Project>

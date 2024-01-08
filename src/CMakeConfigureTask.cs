@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Tasks;
 
 namespace GeNet.Sdk.NativeShim;
 

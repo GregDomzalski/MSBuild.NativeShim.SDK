@@ -5,5 +5,23 @@
   Licensed under the MIT license.
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+    ============================================================================================
+    Build
 
+    The core build runs through all of the steps necessary to build a CMake Native Shim project.
+    ============================================================================================
+    -->
+    <PropertyGroup>
+        <BuildDependsOn>
+            GenerateVcpkgManifest;
+            GenerateCMakeListsFile;
+            ConfigureCMakeProject;
+            BuildCMakeProject;
+        </BuildDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Build" DependsOnTargets="$(BuildDependsOn)">
+
+    </Target>
 </Project>

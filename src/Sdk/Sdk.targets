@@ -26,23 +26,5 @@
     <!-- All targets and post-project variables for CMake are located here -->
     <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.CMake.targets" />
 
-    <!--
-    ============================================================================================
-    CoreBuild
-
-    The core build runs through all of the steps necessary to build a CMake Native Shim project.
-    ============================================================================================
-    -->
-    <PropertyGroup>
-        <CoreBuildDependsOn>
-            GenerateVcpkgManifest;
-            GenerateCMakeListsFile;
-            ConfigureCMakeProject;
-            BuildCMakeProject;
-        </CoreBuildDependsOn>
-    </PropertyGroup>
-
-    <Target Name="CoreBuild" DependsOnTargets="$(CoreBuildDependsOn)">
-
-    </Target>
+    <Import Project="$(_ThisSDKBuildDir)MSBuild.NativeShim.Build.targets" />
 </Project>
