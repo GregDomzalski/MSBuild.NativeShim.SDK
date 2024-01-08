@@ -52,5 +52,6 @@
         <CMakeDefine Include="CMAKE_BUILD_TYPE" Value="$(CMakeConfiguration)" />
         <CMakeDefine Include="CMAKE_OSX_ARCHITECTURE" Value="$(_CMakeOSXArchitecture)" Condition="$(_CMakeOSXArchitectureNeeded)" />
         <CMakeDefine Include="VCPKG_TARGET_TRIPLET" Value="$(VcpkgTargetTriplet)" />
+        <CMakeDefine Include="CMAKE_INSTALL_LIBDIR" Value="''" />
     </ItemGroup>
 </Project>

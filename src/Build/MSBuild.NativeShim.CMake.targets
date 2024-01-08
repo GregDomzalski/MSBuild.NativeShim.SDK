@@ -8,6 +8,8 @@
 
     <UsingTask TaskName="CreateCMakeListsTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
     <UsingTask TaskName="CMakeConfigureTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+    <UsingTask TaskName="CMakeBuildTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
+    <UsingTask TaskName="CMakeInstallTask" AssemblyFile="$(_ThisSDKAssemblyPath)" />
 
     <!--
     ============================================================================================
@@ -50,5 +52,13 @@
     -->
     <Target Name="BuildCMakeProject">
         <Message Text="Running BuildCMakeProject" Importance="high" />
+        <CMakeBuildTask
+            CMakeToolPath="$(CMakeToolPath)"
+            BuildDirectory="$(IntermediateOutputPath)cmake"
+            Configuration="$(CMakeConfiguration)" />
+        <CMakeInstallTask
+            CMakeToolPath="$(CMakeToolPath)"
+            BuildDirectory="$(IntermediateOutputPath)cmake"
+            Configuration="$(CMakeConfiguration)" />
     </Target>
 </Project>

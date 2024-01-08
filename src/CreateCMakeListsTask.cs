@@ -95,6 +95,13 @@ public class CreateCMakeListsTask : Task
         sb.AppendLine(")");
         sb.AppendLine();
 
+        // Install
+        sb.AppendLine("install(");
+        sb.AppendLine($"    TARGETS {ProjectName}");
+        sb.AppendLine("    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}");
+        sb.AppendLine(")");
+        sb.AppendLine();
+
         File.WriteAllText(CMakeListsFilePath!, sb.ToString());
 
         return true;
